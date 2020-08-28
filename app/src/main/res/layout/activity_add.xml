@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style=""
+    tools:context=".Add">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:verticalScrollbarPosition="right"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+            <!-- ============================Not mandatory==================== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mandatory"
+                android:textSize="25dp"
+                android:textColor="@android:color/holo_orange_dark"
+                android:padding="8dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="*Item"
+                    style="@style/addingpage"/>
+                <EditText
+                    android:id="@+id/enteritem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    style="@style/addingpage"
+                    android:hint="Enter the item"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="*Cost Price/PC"
+                    style="@style/addingpage"/>
+                <EditText
+                    android:id="@+id/entercpperpiece"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:inputType="number"
+                    style="@style/addingpage"
+                    android:hint="Cost Price/PC"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="*Selling Price/pc"
+                    style="@style/addingpage"/>
+                <EditText
+                    android:id="@+id/enterspperpc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    style="@style/addingpage"
+                    android:inputType="number"
+                    android:hint="Selling Price / PC"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="*Selling Price/Ctn"
+                    style="@style/addingpage"/>
+                <EditText
+                    android:id="@+id/entersppercarton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    style="@style/addingpage"
+                    android:inputType="number"
+                    android:hint="Price per Carton"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right"
+                >
+                <ImageView
+                    android:id="@+id/addimagepreview"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:src="@drawable/image"
+                    android:layout_marginRight="15dp"
+                    />
+                <Button
+                    android:id="@+id/selecttheimage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:text="Select"/>
+            </LinearLayout>
+            <!-- ============================Not mandatory==================== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Not Mandatory"
+                android:textSize="25dp"
+                android:textColor="@android:color/holo_orange_dark"
+                android:padding="8dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Memo / Description"
+                    style="@style/addingpage"/>
+                <EditText
+                    android:id="@+id/entermemo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    style="@style/addingpage"
+                    android:hint="Description"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                >
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/addingpage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Barcode"
+                    android:layout_weight="2.5"
+                    android:layout_marginTop="5dp"
+                    />
+                <EditText
+                    android:id="@+id/enterbarcode"
+                    style="@style/addingpage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Barcode"
+                    android:padding="5dp"
+                    android:layout_weight="5"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <Button
+                    android:id="@+id/barcodescanbutton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Scan"
+                    android:layout_weight="2.5"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                >
+                <Button
+                    android:id="@+id/save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Add"
+                    android:layout_marginRight="5dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

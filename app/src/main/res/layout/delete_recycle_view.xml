@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="50dp"
+    android:layout_margin="20dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/cardview_dark_background"
+        android:weightSum="10"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="8"
+            >
+            <ImageView
+                android:id="@+id/goodsimgae"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/woman"
+                />
+            <TextView
+                android:id="@+id/edittitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:text="Title"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text="S.P. Per piece : "
+                    />
+                <TextView
+                    android:id="@+id/editspperpiece"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="here is the price"
+
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text="S.P. Per Carton : "
+                    />
+                <TextView
+                    android:id="@+id/editsppercarton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="here is the price"
+
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/edittitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:text="Title"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+        </LinearLayout>-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            >
+            <ImageView
+                android:id="@+id/editedit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/deletedelete"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

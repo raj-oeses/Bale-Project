@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/searchinginsearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search..."
+        android:textSize="20dp"/>
+
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
+            android:weightSum="10">
+
+            <TextView
+                style="@style/table_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Item" />
+
+            <TextView
+                style="@style/table_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="C.P./pc" />
+
+            <TextView
+                style="@style/table_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="S.P./ piece" />
+
+            <TextView
+                style="@style/table_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="S.P./Carton" />
+
+            <TextView
+                style="@style/table_list"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Barcode" />
+        </TableRow>
+
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#efefef"
+        />
+</LinearLayout>

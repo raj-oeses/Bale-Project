@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    app:cardCornerRadius="5dp"
+    android:background="#f1f1f1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:weightSum="10"
+        android:layout_margin=".5dp"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:layout_weight="8"
+            >
+            <ImageView
+                android:id="@+id/goodsimgae"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/woman"
+                />
+            <TextView
+                android:id="@+id/edittitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/edit_text_recycleview_title"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/edit_text_recycleview_cpandsp"
+                    android:text="S.P. Per piece   : Rs."
+                    android:layout_weight="1"
+                    />
+                <TextView
+                    android:id="@+id/editspperpiece"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/edit_text_recycleview_cpandsp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="price"
+                    android:layout_weight="1.5"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/edit_text_recycleview_cpandsp"
+                    android:text="S.P. Per Carton : Rs. "
+                    android:layout_weight="1"
+                    />
+                <TextView
+                    android:id="@+id/editsppercarton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/edit_text_recycleview_cpandsp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="price"
+                    android:layout_weight="1.5"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+            <ImageView
+                android:id="@+id/editedit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pencil"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
+

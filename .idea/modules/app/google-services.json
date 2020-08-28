@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "922483512560",
+    "firebase_url": "https://demoforall-17e03.firebaseio.com",
+    "project_id": "demoforall-17e03",
+    "storage_bucket": "demoforall-17e03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922483512560:android:d66994e6e344107073de35",
+        "android_client_info": {
+          "package_name": "com.bhawani.bhawanitraders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922483512560-j61ckiav8hu48a4268sihdd2bn2jkp3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bhawani.bhawanitraders",
+            "certificate_hash": "e4edeb32cda8576b4aa2ea3d04cef6680bd6005b"
+          }
+        },
+        {
+          "client_id": "922483512560-e8iidvtmg1d7j8pulbnfcfo1eqh66755.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCgCwbt6VFf4OUrt0603QINJyRwtLn3Nw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922483512560-e8iidvtmg1d7j8pulbnfcfo1eqh66755.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

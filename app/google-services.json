@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "922483512560",
+    "firebase_url": "https://demoforall-17e03.firebaseio.com",
+    "project_id": "demoforall-17e03",
+    "storage_bucket": "demoforall-17e03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922483512560:android:d66994e6e344107073de35",
+        "android_client_info": {
+          "package_name": "com.bhawani.bhawanitraders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922483512560-e8iidvtmg1d7j8pulbnfcfo1eqh66755.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCgCwbt6VFf4OUrt0603QINJyRwtLn3Nw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922483512560-e8iidvtmg1d7j8pulbnfcfo1eqh66755.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
