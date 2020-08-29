@@ -45,7 +45,10 @@ public class Delete extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
-        reference=FirebaseStorage.getInstance().getReference("Child");
+
+    }
+
+    public void uselessnow(){/*reference=FirebaseStorage.getInstance().getReference("Child");
         mDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Temp");
         imageView=findViewById(R.id.deletemadekhaune);
         choose=findViewById(R.id.choosebetween);
@@ -67,7 +70,7 @@ public class Delete extends AppCompatActivity{
 
     }
 
-    
+
 
     private void SelectTheImage() {
         Intent intent=new Intent();
@@ -84,7 +87,7 @@ public class Delete extends AppCompatActivity{
             if(requestCode==1 && data!=null &&resultCode==RESULT_OK &&data.getData() !=null){
                 mImageUri=data.getData();
                 Picasso.get().load(mImageUri).into(imageView);
-            
+
         }
 
     }
@@ -103,7 +106,6 @@ public class Delete extends AppCompatActivity{
     private String getFileExtention(Uri mImageUri) {
         ContentResolver cR=getContentResolver();
         MimeTypeMap mime=MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(mImageUri));
-    }
+        return mime.getExtensionFromMimeType(cR.getType(mImageUri));*/}
 
 }
