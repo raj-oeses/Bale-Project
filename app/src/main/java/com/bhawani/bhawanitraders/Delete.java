@@ -6,137 +6,104 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.zxing.integration.android.IntentIntegrator;
+import com.squareup.picasso.Picasso;
 
-import java.util.UUID;
+import java.util.HashMap;
 
-public class Delete extends AppCompatActivity implements View.OnClickListener {
-    StorageReference mStorage;
-    DatabaseReference mRefrence;
-    Button select,upload;
-    ImageView showimagetemp;
-    Uri uri;
+public class Delete extends AppCompatActivity{
+    DatabaseReference mDatabaseRef;
+    ImageView imageView;
+    StorageReference reference;
+    Uri mImageUri;
+    Button choose,upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
-        select=findViewById(R.id.selecttheimageindelete );
-        upload=findViewById(R.id.uploading);
-        showimagetemp=findViewById(R.id.showimagetemp);
-        mStorage= FirebaseStorage.getInstance().getReference("uploads");
-        mRefrence=FirebaseDatabase.getInstance().getReference("uploads");
+        reference=FirebaseStorage.getInstance().getReference("Child");
+        mDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Temp");
+        imageView=findViewById(R.id.deletemadekhaune);
+        choose=findViewById(R.id.choosebetween);
+        upload =findViewById(R.id.UpoladToFirebase);
+
+        choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectTheImage();
+            }
+        });
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UploadGardeneAba();
+            }
+        });
 
 
-        select.setOnClickListener(this);
-        upload.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.selecttheimageindelete:
-                Intent intent=new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,1);
-                break;
-            case R.id.uploading:
-                UploadingTheImage();
-                break;
-        }
-    }
+    
 
-    private String getFileExtention( Uri uri){
-        ContentResolver cR=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
+    private void SelectTheImage() {
+        Intent intent=new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,1);
 
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1&& data.getData()!=null &&data!=null && resultCode==RESULT_OK){
-            uri=data.getData();
-            showimagetemp.setImageResource(0);
-            showimagetemp.setImageURI(uri);
-        }
-        else {
-            Toast.makeText(this, "Error File", Toast.LENGTH_SHORT).show();
-        }
-    }
-    private void UploadingTheImage() {
-        /*//StorageReference filerefrence=mStorage.child(System.currentTimeMillis()+"."+getFileExtention(uri));
-        StorageReference filerefrence = mStorage.child("images/rivers.jpg");
-        filerefrence.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(Delete.this, "File is uploaded", Toast.LENGTH_SHORT).show();
-                showimagetemp.setImageResource(0);
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(Delete.this, "On Progress...", Toast.LENGTH_SHORT).show();
-                double progress=(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
-                progressBar.setProgress((int)progress);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Delete.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-            }
-        });*/
-        if(uri!=null){
-            final ProgressDialog progressDialog= new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
 
-            //StorageReference ref = mStorage.child("images/"+ UUID.randomUUID().toString());
-            StorageReference ref = mStorage.child(System.currentTimeMillis()+"."+getFileExtention(uri));
-            ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    showimagetemp.setImageResource(0);
-                    //showimagetemp.setImageResource(0);
-                    Toast.makeText(Delete.this,"Image Uploaded!!",Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(Delete.this, "Failed..", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded "+ (int)progress + "%");
-                }
-            });
+            if(requestCode==1 && data!=null &&resultCode==RESULT_OK &&data.getData() !=null){
+                mImageUri=data.getData();
+                Picasso.get().load(mImageUri).into(imageView);
+            
         }
 
     }
+    private void UploadGardeneAba() {
+        StorageReference filestorage=reference.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
+        filestorage.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot snapshot) {
+                String link= snapshot.getMetadata().getReference().getDownloadUrl().toString();
+
+            }
+        });
+
+    }
+
+    private String getFileExtention(Uri mImageUri) {
+        ContentResolver cR=getContentResolver();
+        MimeTypeMap mime=MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(mImageUri));
+    }
+
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    style=""
+    android:background="@drawable/back2"
     tools:context=".Add">
     <ScrollView
         android:layout_width="match_parent"
@@ -154,7 +154,6 @@
                 android:orientation="horizontal"
                 android:weightSum="10"
                 >
-
                 <TextView
                     android:id="@+id/textView"
                     style="@style/addingpage"
@@ -200,9 +199,5 @@
                     />
             </LinearLayout>
         </LinearLayout>
-
-
     </ScrollView>
-
-
 </LinearLayout>

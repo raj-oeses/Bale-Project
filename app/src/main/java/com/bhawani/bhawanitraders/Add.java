@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -26,10 +26,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -55,15 +57,15 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
         barcode=findViewById(R.id.enterbarcode);
         scan=findViewById(R.id.barcodescanbutton);
         save=findViewById(R.id.save);
-        //select=findViewById(R.id.selecttheimage);
-        //imagepreview=findViewById(R.id.addimagepreview);
+        select=findViewById(R.id.selecttheimage);
+        imagepreview=findViewById(R.id.addimagepreview);
 
-        mStorageRef=FirebaseStorage.getInstance().getReference();
+        mStorageRef=FirebaseStorage.getInstance().getReference().child("Details");
         databaseReference=FirebaseDatabase.getInstance().getReference().child("Details");
 
         scan.setOnClickListener(this);
         save.setOnClickListener(this);
-//        select.setOnClickListener(this);
+        select.setOnClickListener(this);
 
     }
     @Override
@@ -77,17 +79,16 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 intentIntegrator.setPrompt("Scanning...");
                 intentIntegrator.initiateScan();
                 break;
-            /*case R.id.selecttheimage:
+            case R.id.selecttheimage:
                 SelectTheImage();
-                break;*/
+                break;
             case R.id.save:
-                Savingthedetails();
+                SavingTheDetails();
                 break;
             default:
                 Toast.makeText(this, "Choose Something..", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void SelectTheImage() {
         Intent intent=new Intent();
         intent.setType("image/*");
@@ -115,17 +116,17 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
         if (requestCode==PICK_IMAGE_REQUEST && data!=null &&resultCode==RESULT_OK &&data.getData() !=null){
             mImageUri=data.getData();
             imagepreview.setImageResource(0);
-            imagepreview.setImageURI(mImageUri);
-
+            Picasso.get().load(mImageUri).into(imagepreview);
         }
     }
-
-    private String getFileExtention( Uri uri){
+    private String getFileExtention(Uri uri){
         ContentResolver cR=getContentResolver();
         MimeTypeMap mime=MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-    void Savingthedetails() {
+
+    /*==========================================Storing In Firebase  String Details===========================================*/
+    void StoringInFirebase(String ImageUrl) {
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("Item", item.getText().toString().trim());
@@ -134,7 +135,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
         data.put("SPPerCarton", sppercarton.getText().toString().trim());
         data.put("BarCode", barcode.getText().toString().trim());
         data.put("Description", memo.getText().toString().trim());
-        //data.put("ImageUrl", mImageUri.toString().trim());
+        data.put("ImageUrl",ImageUrl);
 
 
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -143,32 +144,27 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 ||cpperpiece.getText().toString().equals("")
                 ||spperpiece.getText().toString().equals("")
                 ||sppercarton.getText().toString().equals("")
-                /*||mImageUri==null*/) {
-            Toast.makeText(this, "Enter mandatory", Toast.LENGTH_SHORT).show();
+                ||mImageUri==null) {
+            Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
         }
         else if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
             Toast.makeText(this, "Check Internet Connection!!!", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(this, "Processing...", Toast.LENGTH_SHORT).show();
 
-            //StoringImage();
             databaseReference.push()
                     .setValue(data)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            //String ImageUploadId = databaseReference.push().getKey();
                             item.setText("");
                             cpperpiece.setText("");
                             spperpiece.setText("");
                             sppercarton.setText("");
                             barcode.setText("");
                             memo.setText("");
-                            //imagepreview.setImageMatrix(null);
-                            //Toast.makeText(Add.this, ImageUploadId, Toast.LENGTH_SHORT).show();
-                            //StoringImage(ImageUploadId);
+                            imagepreview.setImageResource(R.drawable.image);
                             Toast.makeText(Add.this, "Done Uploading", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -179,11 +175,56 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             });
         }
     }
-    public void StoringImage(){
-       // StorageReference filerefrence=mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
-       /* StorageReference filerefrence=mStorageRef.child(imageUploadId).child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
-        filerefrence.putFile(mImageUri);*/
-       StorageReference filerefrence=mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
-        filerefrence.putFile(mImageUri);
+    /*==================================this is for image storage===========================================*/
+    public void SavingTheDetails(){
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (item.getText().toString().equals("")
+                ||cpperpiece.getText().toString().equals("")
+                ||spperpiece.getText().toString().equals("")
+                ||sppercarton.getText().toString().equals("")
+                ||mImageUri==null) {
+            Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
+        }
+        else if (mImageUri ==null){
+            Toast.makeText(this, "Upoload The Image...", Toast.LENGTH_SHORT).show();
+
+        }
+        else if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
+            Toast.makeText(this, "Check Internet Connection...", Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+            final ProgressDialog progressDialog= new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference filerefrence = mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
+
+            filerefrence.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    //String link=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                    while(!uri.isComplete());
+                    Uri link = uri.getResult();
+                    StoringInFirebase(link.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Failed..", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploaded "+ (int)progress + "%");
+                }
+            });
+        }
     }
 }

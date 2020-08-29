@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int image[] = {R.drawable.ic_display,R.drawable.display2};
+        int image[] = {R.drawable.owner,R.drawable.ic_with_basket_full_name,R.drawable.display2};
 
         CardView search = findViewById(R.id.search);
         CardView add = findViewById(R.id.add);
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setBackgroundResource(image);
 
         flipper.addView(imageView);
-        flipper.setFlipInterval(10000);   //10 sec ko lagi
+        flipper.setFlipInterval(4000);   //10 sec ko lagi
         flipper.setAutoStart(true);
 
         flipper.setInAnimation(this, android.R.anim.slide_in_left);

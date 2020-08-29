@@ -1,18 +1,19 @@
 package com.bhawani.bhawanitraders;
 
 public class EditModel {
-    String Item,CPPerPiece,SPPerPiece,SPPerCarton,BarCode,Description;
+    String Item,CPPerPiece,SPPerPiece,SPPerCarton,BarCode,Description,ImageUrl;
 
     public EditModel() {
     }
 
-    public EditModel(String item, String CPPerPiece, String SPPerPiece, String SPPerCarton, String barCode, String description) {
+    public EditModel(String item, String CPPerPiece, String SPPerPiece, String SPPerCarton, String barCode, String description, String imageUrl) {
         Item = item;
         this.CPPerPiece = CPPerPiece;
         this.SPPerPiece = SPPerPiece;
         this.SPPerCarton = SPPerCarton;
         BarCode = barCode;
         Description = description;
+        ImageUrl = imageUrl;
     }
 
     public String getItem() {
@@ -61,5 +62,13 @@ public class EditModel {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
     }
 }

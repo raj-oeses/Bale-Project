@@ -21,6 +21,7 @@ public class Edit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
         editview = findViewById(R.id.editrecycleview);
         searching= findViewById(R.id.editmasearch);
 
@@ -29,7 +30,7 @@ public class Edit extends AppCompatActivity {
         final FirebaseRecyclerOptions<EditModel> options= new FirebaseRecyclerOptions.Builder<EditModel>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("Details"),EditModel.class)
                 .build();
-        adapter=new AdapterEdit(options);
+        adapter=new AdapterEdit(options,this);
         editview.setAdapter(adapter);
 
         //------------------for searching-----------------------------
@@ -52,7 +53,7 @@ public class Edit extends AppCompatActivity {
         final FirebaseRecyclerOptions<EditModel> options= new FirebaseRecyclerOptions.Builder<EditModel>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("Details").orderByChild("Item").startAt(data).endAt(data+"\uf8ff"),EditModel.class)
                 .build();
-        adapter=new AdapterEdit(options);
+        adapter=new AdapterEdit(options,this);
         adapter.startListening();
         editview.setAdapter(adapter);
     }
