@@ -29,19 +29,15 @@ public class AdapterEdit extends FirebaseRecyclerAdapter<EditModel,AdapterEdit.E
         holder.spperpiece.setText(model.getSPPerPiece());
         holder.sppercarton.setText(model.getSPPerCarton());
         Picasso.get().load(model.getImageUrl()).into(holder.goodsimgae);
+
         holder.editmaedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent EditingTheDetail=new Intent(context,EditingActivity.class);
                 EditingTheDetail.putExtra("key",getRef(position).getKey());
-                //Toast.makeText(context, "Ready to go to next intent", Toast.LENGTH_SHORT).show();
                 context.startActivity(EditingTheDetail);
-
             }
         });
-
-
-
     }
     @NonNull
     @Override

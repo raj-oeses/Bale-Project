@@ -43,7 +43,9 @@ public class Edit extends AppCompatActivity {
                 Searching(dataforsearch);
             }
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         //------------------for searhing ends---------------------------

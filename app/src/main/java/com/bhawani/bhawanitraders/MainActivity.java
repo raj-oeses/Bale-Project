@@ -1,10 +1,14 @@
 package com.bhawani.bhawanitraders;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
@@ -73,4 +77,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         flipper.setOutAnimation(this, android.R.anim.slide_out_right);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.contact_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.contact:
+                Intent abtme=new Intent(this,AboutMe.class);
+                startActivity(abtme);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

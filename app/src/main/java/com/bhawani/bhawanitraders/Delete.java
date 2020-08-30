@@ -1,111 +1,70 @@
 package com.bhawani.bhawanitraders;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
 
 public class Delete extends AppCompatActivity{
-    DatabaseReference mDatabaseRef;
-    ImageView imageView;
-    StorageReference reference;
-    Uri mImageUri;
-    Button choose,upload;
+
+    AdapterDelete adapter;
+    EditText deletemasearch;
+    RecyclerView deletemarecycleview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
 
+        deletemasearch=findViewById(R.id.deletemasearch);
+        deletemarecycleview=findViewById(R.id.deleterecycleview);
 
-    }
+        deletemarecycleview.setLayoutManager( new LinearLayoutManager(this));
 
-    public void uselessnow(){/*reference=FirebaseStorage.getInstance().getReference("Child");
-        mDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Temp");
-        imageView=findViewById(R.id.deletemadekhaune);
-        choose=findViewById(R.id.choosebetween);
-        upload =findViewById(R.id.UpoladToFirebase);
+        final FirebaseRecyclerOptions<DeleteModel> options= new FirebaseRecyclerOptions.Builder<DeleteModel>()
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("Details"),DeleteModel.class)
+                .build();
+        adapter=new AdapterDelete(options,this);
+        deletemarecycleview.setAdapter(adapter);
 
-        choose.setOnClickListener(new View.OnClickListener() {
+        deletemasearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                SelectTheImage();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String dataforsearch=deletemasearch.getText().toString();
+                Searching(dataforsearch);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
-        upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UploadGardeneAba();
-            }
-        });
-
 
     }
-
-
-
-    private void SelectTheImage() {
-        Intent intent=new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,1);
-
+    private void Searching(String data) {
+        final FirebaseRecyclerOptions<DeleteModel> options= new FirebaseRecyclerOptions.Builder<DeleteModel>()
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("Details").orderByChild("Item").startAt(data).endAt(data+"\uf8ff"),DeleteModel.class)
+                .build();
+        adapter= new AdapterDelete(options,this);
+        adapter.startListening();
+        deletemarecycleview.setAdapter(adapter);
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-            if(requestCode==1 && data!=null &&resultCode==RESULT_OK &&data.getData() !=null){
-                mImageUri=data.getData();
-                Picasso.get().load(mImageUri).into(imageView);
-
-        }
-
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
-    private void UploadGardeneAba() {
-        StorageReference filestorage=reference.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
-        filestorage.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot snapshot) {
-                String link= snapshot.getMetadata().getReference().getDownloadUrl().toString();
-
-            }
-        });
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
-
-    private String getFileExtention(Uri mImageUri) {
-        ContentResolver cR=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(mImageUri));*/}
-
 }
