@@ -3,15 +3,24 @@ package com.bhawani.bhawanitraders;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -40,7 +49,8 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
     Button scan,save,select;
     Uri mImageUri;
     ImageView imagepreview;
-    private static final int PICK_IMAGE_REQUEST=1;
+    private static final int PICK_IMAGE_REQUEST=2;
+    private static final int CAMERA_KO=1;
 
     StorageReference mStorageRef;
     DatabaseReference databaseReference;
@@ -80,6 +90,8 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 intentIntegrator.initiateScan();
                 break;
             case R.id.selecttheimage:
+
+
                 SelectTheImage();
                 break;
             case R.id.save:
@@ -89,13 +101,38 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, "Choose Something..", Toast.LENGTH_SHORT).show();
         }
     }
-    private void SelectTheImage() {
-        Intent intent=new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,PICK_IMAGE_REQUEST);
 
+    private void SelectTheImage() {
+        AlertDialog.Builder choose=new AlertDialog.Builder(this);
+         choose.setTitle("Chose the Media");
+         choose.setMessage("What do You Want To Choose...");
+         choose.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 Toast.makeText(Add.this, "This is camera", Toast.LENGTH_SHORT).show();
+                 if(ContextCompat.checkSelfPermission(Add.this,
+                         Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                     ActivityCompat.requestPermissions(Add.this,new String[]{
+                             Manifest.permission.CAMERA
+                     },CAMERA_KO);
+                 }
+
+                 Intent camera=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                 startActivityForResult(camera,CAMERA_KO);
+             }
+         }).setNegativeButton("Storage", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 Intent intent=new Intent();
+                 intent.setType("image/*");
+                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                 startActivityForResult(intent,PICK_IMAGE_REQUEST);
+
+             }
+         });
+         choose.show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -114,9 +151,15 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode==PICK_IMAGE_REQUEST && data!=null &&resultCode==RESULT_OK &&data.getData() !=null){
-            mImageUri=data.getData();
-            imagepreview.setImageResource(0);
-            Picasso.get().load(mImageUri).into(imagepreview);
+            if(requestCode==PICK_IMAGE_REQUEST){
+                mImageUri=data.getData();
+                imagepreview.setImageResource(0);
+                Picasso.get().load(mImageUri).into(imagepreview);
+            }
+        }
+        else if (requestCode==CAMERA_KO&&data.getExtras()!=null){
+            Bitmap bitmap=(Bitmap)data.getExtras().get("data");
+            imagepreview.setImageBitmap(bitmap);
         }
     }
     private String getFileExtention(Uri uri){
