@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#efefef"
+    android:background="@drawable/back2"
     tools:context=".Delete">
     <EditText
         android:id="@+id/deletemasearch"

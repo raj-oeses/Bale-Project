@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -42,13 +43,19 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
+
+import static java.security.AccessController.getContext;
 
 public class Add extends AppCompatActivity implements View.OnClickListener {
     EditText item,cpperpiece,spperpiece,sppercarton,memo,barcode;
     Button scan,save,select;
     Uri mImageUri;
     ImageView imagepreview;
+    Bitmap bitmap;
+    Uri bitmaptouri;
     private static final int PICK_IMAGE_REQUEST=2;
     private static final int CAMERA_KO=1;
 
@@ -72,6 +79,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
 
         mStorageRef=FirebaseStorage.getInstance().getReference().child("Details");
         databaseReference=FirebaseDatabase.getInstance().getReference().child("Details");
+        databaseReference.keepSynced(true);
 
         scan.setOnClickListener(this);
         save.setOnClickListener(this);
@@ -103,7 +111,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void SelectTheImage() {
-        AlertDialog.Builder choose=new AlertDialog.Builder(this);
+        AlertDialog.Builder choose = new AlertDialog.Builder(this);
          choose.setTitle("Chose the Media");
          choose.setMessage("What do You Want To Choose...");
          choose.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
@@ -158,8 +166,20 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             }
         }
         else if (requestCode==CAMERA_KO&&data.getExtras()!=null){
-            Bitmap bitmap=(Bitmap)data.getExtras().get("data");
+            /*bitmap=(Bitmap)data.getExtras().get("data");
             imagepreview.setImageBitmap(bitmap);
+            bitmaptouri=getImageUri(bitmap);*/
+
+            //mImageUri = data.getData();
+            try{
+                mImageUri = data.getData();
+                Toast.makeText(this, bitmaptouri.toString(), Toast.LENGTH_SHORT).show();
+                
+            }catch (Exception e){
+                Toast.makeText(this, "Something went wrong....", Toast.LENGTH_SHORT).show();
+                
+            }
+            
         }
     }
     private String getFileExtention(Uri uri){
@@ -226,10 +246,11 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 ||cpperpiece.getText().toString().equals("")
                 ||spperpiece.getText().toString().equals("")
                 ||sppercarton.getText().toString().equals("")
-                ||mImageUri==null) {
-            Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
+                ||(mImageUri==null)) {
+            ///Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, bitmaptouri.toString(), Toast.LENGTH_SHORT).show();
         }
-        else if (mImageUri ==null){
+        else if (mImageUri==null&&bitmap==null){
             Toast.makeText(this, "Upoload The Image...", Toast.LENGTH_SHORT).show();
 
         }
@@ -269,5 +290,11 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 }
             });
         }
+    }
+    public Uri getImageUri( Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }

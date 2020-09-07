@@ -23,7 +23,7 @@ public class AdapterSearch extends FirebaseRecyclerAdapter<SearchModel, AdapterS
         holder.cpperpiece.setText(model.getCPPerPiece());
         holder.spperpiece.setText(model.getSPPerPiece());
         holder.sppercarton.setText(model.getSPPerCarton());
-        holder.barcode.setText(model.getBarCode());
+        holder.description.setText(model.getDescription());
 
     }
 
@@ -37,7 +37,7 @@ public class AdapterSearch extends FirebaseRecyclerAdapter<SearchModel, AdapterS
 
     class RecycleViewHolder extends RecyclerView.ViewHolder{
 
-        TextView item,cpperpiece,spperpiece,sppercarton,barcode;
+        TextView item,cpperpiece,spperpiece,sppercarton,description;
 
         public RecycleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -45,7 +45,7 @@ public class AdapterSearch extends FirebaseRecyclerAdapter<SearchModel, AdapterS
             cpperpiece=itemView.findViewById(R.id.cpperpiece);
             spperpiece=itemView.findViewById(R.id.spperpiece);
             sppercarton=itemView.findViewById(R.id.sppercarton);
-            barcode=itemView.findViewById(R.id.barcode);
+            description=itemView.findViewById(R.id.description);
         }
     }
 

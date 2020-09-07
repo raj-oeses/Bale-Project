@@ -30,36 +30,36 @@
                 style="@style/table_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="4"
                 android:text="Item" />
 
             <TextView
                 style="@style/table_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="C.P./pc" />
+                android:layout_weight="1"
+                android:text="C.P./\npc" />
 
             <TextView
                 style="@style/table_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="S.P./ piece" />
+                android:layout_weight="1"
+                android:text="S.P./\npc" />
 
             <TextView
                 style="@style/table_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="S.P./Carton" />
+                android:layout_weight="1"
+                android:text="S.P./\nCarton" />
 
             <TextView
                 style="@style/table_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:text="Barcode" />
+                android:layout_weight="3"
+                android:text="Description" />
         </TableRow>
 
     </TableLayout>
