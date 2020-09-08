@@ -45,6 +45,7 @@ public class Search extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
+    /*===========================================searching data=================================*/
     private void Searching(String data) {
         FirebaseRecyclerOptions<SearchModel> options =
                 new FirebaseRecyclerOptions.Builder<SearchModel>()

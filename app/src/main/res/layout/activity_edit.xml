@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/back2"
+    android:background="#A24D83"
     tools:context=".Edit">
     <EditText
         android:id="@+id/editmasearch"
@@ -16,5 +16,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/editrecycleview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#A24D83"
+        />
 </LinearLayout>

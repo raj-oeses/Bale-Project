@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/back2"
+    android:background="#A24D83"
     tools:context=".Delete">
     <EditText
         android:id="@+id/deletemasearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search"
+        android:textColorHint="#ffffff"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/deleterecycleview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#efefef"
+        />
 
 </LinearLayout>

@@ -5,11 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,7 +19,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -44,15 +41,12 @@ import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.HashMap;
-
-import static java.security.AccessController.getContext;
 
 public class Add extends AppCompatActivity implements View.OnClickListener {
     EditText item,cpperpiece,spperpiece,sppercarton,memo,barcode;
     Button scan,save,select;
-    Uri mImageUri;
+    Uri mImageUri=null;
     ImageView imagepreview;
     Bitmap bitmap;
     Uri bitmaptouri;
@@ -98,8 +92,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 intentIntegrator.initiateScan();
                 break;
             case R.id.selecttheimage:
-
-
                 SelectTheImage();
                 break;
             case R.id.save:
@@ -109,7 +101,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, "Choose Something..", Toast.LENGTH_SHORT).show();
         }
     }
-
+/*=========================================selecting the image==============*/
     private void SelectTheImage() {
         AlertDialog.Builder choose = new AlertDialog.Builder(this);
          choose.setTitle("Chose the Media");
@@ -124,9 +116,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                              Manifest.permission.CAMERA
                      },CAMERA_KO);
                  }
-
-                 Intent camera=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                 startActivityForResult(camera,CAMERA_KO);
              }
          }).setNegativeButton("Storage", new DialogInterface.OnClickListener() {
              @Override
@@ -140,7 +129,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
          });
          choose.show();
     }
-
+/*======================================On Activity Result====================================*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,24 +153,47 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 imagepreview.setImageResource(0);
                 Picasso.get().load(mImageUri).into(imagepreview);
             }
-        }
-        else if (requestCode==CAMERA_KO&&data.getExtras()!=null){
-            /*bitmap=(Bitmap)data.getExtras().get("data");
-            imagepreview.setImageBitmap(bitmap);
-            bitmaptouri=getImageUri(bitmap);*/
-
-            //mImageUri = data.getData();
-            try{
-                mImageUri = data.getData();
-                Toast.makeText(this, bitmaptouri.toString(), Toast.LENGTH_SHORT).show();
-                
-            }catch (Exception e){
-                Toast.makeText(this, "Something went wrong....", Toast.LENGTH_SHORT).show();
-                
+            else {
+                mImageUri=null;
             }
+        }
+        else if (requestCode==CAMERA_KO){
+
+            switch (resultCode){
+                case RESULT_OK:
+                    Bitmap bitmap= (Bitmap) data.getExtras().get("data");
+                    imagepreview.setImageBitmap(bitmap);
+                    HandleUpload(bitmap);
+
+                    break;
+            }
+
+
             
         }
     }
+    /*====================================Bitmap===============================================*/
+
+    private void HandleUpload(Bitmap bitmap) {
+         ByteArrayOutputStream baos=new ByteArrayOutputStream();
+         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+         StorageReference reference=FirebaseStorage.getInstance().getReference()
+                 .child("Details").child(System.currentTimeMillis()+".jpeg");
+         reference.putBytes(baos.toByteArray())
+                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                     @Override
+                     public void onSuccess(UploadTask.TaskSnapshot snapshot) {
+                         Toast.makeText(Add.this, "successful", Toast.LENGTH_SHORT).show();
+
+                     }
+                 }).addOnFailureListener(new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e) {
+
+             }
+         });
+    }
+    /*====================================   File Extention   ===============================================*/
     private String getFileExtention(Uri uri){
         ContentResolver cR=getContentResolver();
         MimeTypeMap mime=MimeTypeMap.getSingleton();
@@ -202,64 +214,67 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
 
 
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
 
-        if (item.getText().toString().equals("")
-                ||cpperpiece.getText().toString().equals("")
-                ||spperpiece.getText().toString().equals("")
-                ||sppercarton.getText().toString().equals("")
-                ||mImageUri==null) {
-            Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
-        }
-        else if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
-            Toast.makeText(this, "Check Internet Connection!!!", Toast.LENGTH_SHORT).show();
-        }
-        else {
+            if (item.getText().toString().equals("")) {
+                Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
+            } else if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+                Toast.makeText(this, "Check Internet Connection!!!", Toast.LENGTH_SHORT).show();
+            } else {
 
-            databaseReference.push()
-                    .setValue(data)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            item.setText("");
-                            cpperpiece.setText("");
-                            spperpiece.setText("");
-                            sppercarton.setText("");
-                            barcode.setText("");
-                            memo.setText("");
-                            imagepreview.setImageResource(R.drawable.image);
-                            Toast.makeText(Add.this, "Done Uploading", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(Add.this, "Error!!!", Toast.LENGTH_SHORT).show();
-                }
-            });
+                databaseReference.push()
+                        .setValue(data)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                item.setText("");
+                                cpperpiece.setText("");
+                                spperpiece.setText("");
+                                sppercarton.setText("");
+                                barcode.setText("");
+                                memo.setText("");
+                                imagepreview.setImageResource(R.drawable.image);
+                                Toast.makeText(Add.this, "Done Uploading", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Add.this, "Error!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }catch (Exception e){
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
     }
     /*==================================this is for image storage===========================================*/
     public void SavingTheDetails(){
 
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (item.getText().toString().equals("")
-                ||cpperpiece.getText().toString().equals("")
-                ||spperpiece.getText().toString().equals("")
-                ||sppercarton.getText().toString().equals("")
-                ||(mImageUri==null)) {
-            ///Toast.makeText(this, "Enter Mandatory", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, bitmaptouri.toString(), Toast.LENGTH_SHORT).show();
+        if (item.getText().toString().equals("")) {
+            Toast.makeText(this, "Enter Mandatory...", Toast.LENGTH_SHORT).show();
+            mImageUri=null;
+        }
+        else if (mImageUri!=null/*&&bitmap!=null*/){
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
+                Toast.makeText(this, "Check Your Internet Connection...", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                UploadingImage();
+            }
         }
         else if (mImageUri==null&&bitmap==null){
-            Toast.makeText(this, "Upoload The Image...", Toast.LENGTH_SHORT).show();
-
+            String demoimageuri="https://firebasestorage.googleapis.com/v0/b/demoforall-17e03.appspot.com/o/Details%2Fcamera.png?alt=media&token=903f560f-6b73-4a92-83ed-d5d36e79f50a";
+            StoringInFirebase(demoimageuri);
         }
-        else if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
+
+        /*else if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
             Toast.makeText(this, "Check Internet Connection...", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
+        }*/
+       /* else {
             final ProgressDialog progressDialog= new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -289,12 +304,49 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                     progressDialog.setMessage("Uploaded "+ (int)progress + "%");
                 }
             });
-        }
+        }*/
     }
-    public Uri getImageUri( Bitmap inImage) {
+
+
+    /*====================================Khai taha nai ===============================================*/
+   /* public Uri getImageUri( Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }*/
+
+    /*====================================Uploading with Image ===============================================*/
+
+    public void UploadingImage(){
+            final ProgressDialog progressDialog= new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference filerefrence = mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
+
+            filerefrence.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    //String link=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                    while(!uri.isComplete());
+                    Uri link = uri.getResult();
+                    StoringInFirebase(link.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Failed..", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploaded "+ (int)progress + "%");
+                }
+            });
     }
 }

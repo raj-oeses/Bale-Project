@@ -6,18 +6,23 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.slider.Slider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
     ViewFlipper flipper;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         int image[] = {R.drawable.owner,R.drawable.ic_with_basket_full_name,R.drawable.display2};
+        mAuth=FirebaseAuth.getInstance();
 
         CardView search = findViewById(R.id.search);
         CardView add = findViewById(R.id.add);
@@ -92,5 +98,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(abtme);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser mUser=mAuth.getCurrentUser();
+        if(mUser!=null){
+            //There is some user
+            Toast.makeText(this, "You are logged in as always", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            //There is no user we need to go to the login part
+            startActivity(new Intent(this,Login.class));
+            finish();
+
+        }
+
     }
 }

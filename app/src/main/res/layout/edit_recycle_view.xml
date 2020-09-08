@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/edit_text_recycleview_cpandsp"
-                    android:text="S.P. Per piece   : Rs."
+                    android:text="SP Per pc   :Rs"
                     android:layout_weight="1"
                     />
                 <TextView
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/edit_text_recycleview_cpandsp"
-                    android:text="S.P. Per Carton : Rs. "
+                    android:text="SP Per Ctn : Rs"
                     android:layout_weight="1"
                     />
                 <TextView

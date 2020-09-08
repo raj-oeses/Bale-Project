@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/back2"
+    android:background="#A24D83"
     tools:context=".Add">
     <ScrollView
         android:layout_width="match_parent"
@@ -42,8 +42,17 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     style="@style/addingpage"
+
                     android:hint="Enter the item"/>
             </LinearLayout>
+            <!-- ============================Not mandatory==================== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Not Mandatory"
+                android:textSize="25dp"
+                android:textColor="@android:color/holo_orange_dark"
+                android:padding="8dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="*Cost Price/PC"
+                    android:text="Cost Price/PC"
                     style="@style/addingpage"/>
                 <EditText
                     android:id="@+id/entercpperpiece"
@@ -71,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="*Selling Price/pc"
+                    android:text="Selling Price/pc"
                     style="@style/addingpage"/>
                 <EditText
                     android:id="@+id/enterspperpc"
@@ -90,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="*Selling Price/Ctn"
+                    android:text="Selling Price/Ctn"
                     style="@style/addingpage"/>
                 <EditText
                     android:id="@+id/entersppercarton"
@@ -122,14 +131,7 @@
                     android:layout_marginRight="5dp"
                     android:text="Select"/>
             </LinearLayout>
-            <!-- ============================Not mandatory==================== -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Not Mandatory"
-                android:textSize="25dp"
-                android:textColor="@android:color/holo_orange_dark"
-                android:padding="8dp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
