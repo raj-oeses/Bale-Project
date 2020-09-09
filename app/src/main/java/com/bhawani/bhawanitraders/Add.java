@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -19,6 +20,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -41,6 +44,10 @@ import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Add extends AppCompatActivity implements View.OnClickListener {
@@ -50,6 +57,9 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
     ImageView imagepreview;
     Bitmap bitmap;
     Uri bitmaptouri;
+    String currentPhotoPath;
+    File photoFile;
+
     private static final int PICK_IMAGE_REQUEST=2;
     private static final int CAMERA_KO=1;
 
@@ -109,13 +119,43 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
          choose.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
              @Override
              public void onClick(DialogInterface dialog, int which) {
-                 Toast.makeText(Add.this, "This is camera", Toast.LENGTH_SHORT).show();
-                 if(ContextCompat.checkSelfPermission(Add.this,
+
+                 /*if(ContextCompat.checkSelfPermission(Add.this,
                          Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+
                      ActivityCompat.requestPermissions(Add.this,new String[]{
                              Manifest.permission.CAMERA
                      },CAMERA_KO);
+                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                     dispatchTakePictureIntent();
+
+                     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                         *//*startActivityForResult(takePictureIntent,101);*//*
+                         Toast.makeText(Add.this, "jana aatya xa ", Toast.LENGTH_SHORT).show();
+                         dispatchTakePictureIntent();
+                     }
+                     else {
+                         Toast.makeText(Add.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                     }
+
+                 }*/
+
+                 /*Toast.makeText(Add.this, "This is camera", Toast.LENGTH_SHORT).show();
+                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+                     dispatchTakePictureIntent();
+                 }*/
+                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                     dispatchTakePictureIntent();
                  }
+                 else{
+                     Toast.makeText(Add.this, "its ok to get wrong (smily) (smily)", Toast.LENGTH_SHORT).show();
+                 }
+
              }
          }).setNegativeButton("Storage", new DialogInterface.OnClickListener() {
              @Override
@@ -158,19 +198,9 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             }
         }
         else if (requestCode==CAMERA_KO){
-
-            switch (resultCode){
-                case RESULT_OK:
-                    Bitmap bitmap= (Bitmap) data.getExtras().get("data");
-                    imagepreview.setImageBitmap(bitmap);
-                    HandleUpload(bitmap);
-
-                    break;
+            imagepreview.setImageResource(0);
+            Picasso.get().load(mImageUri).into(imagepreview);
             }
-
-
-            
-        }
     }
     /*====================================Bitmap===============================================*/
 
@@ -265,7 +295,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                 UploadingImage();
             }
         }
-        else if (mImageUri==null&&bitmap==null){
+        else if (mImageUri==null){
             String demoimageuri="https://firebasestorage.googleapis.com/v0/b/demoforall-17e03.appspot.com/o/Details%2Fcamera.png?alt=media&token=903f560f-6b73-4a92-83ed-d5d36e79f50a";
             StoringInFirebase(demoimageuri);
         }
@@ -307,15 +337,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
         }*/
     }
 
-
-    /*====================================Khai taha nai ===============================================*/
-   /* public Uri getImageUri( Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }*/
-
     /*====================================Uploading with Image ===============================================*/
 
     public void UploadingImage(){
@@ -348,5 +369,48 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                     progressDialog.setMessage("Uploaded "+ (int)progress + "%");
                 }
             });
+    }
+
+    /*============================Image From Camera========================================================*/
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+                Toast.makeText(this, "photo file samma pugyo", Toast.LENGTH_SHORT).show();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Toast.makeText(this, "something went worng", Toast.LENGTH_SHORT).show();
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                try {
+                    mImageUri = FileProvider.getUriForFile(this,"com.bhawani.bhawanitraders.fileprovider",photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                    startActivityForResult(takePictureIntent,CAMERA_KO);
+                }catch (Exception e){
+                    Toast.makeText(this,"Camera aayena", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }
