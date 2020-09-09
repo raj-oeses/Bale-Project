@@ -55,8 +55,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
     Button scan,save,select;
     Uri mImageUri=null;
     ImageView imagepreview;
-    Bitmap bitmap;
-    Uri bitmaptouri;
     String currentPhotoPath;
     File photoFile;
 
@@ -119,34 +117,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
          choose.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
              @Override
              public void onClick(DialogInterface dialog, int which) {
-
-                 /*if(ContextCompat.checkSelfPermission(Add.this,
-                         Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-
-                     ActivityCompat.requestPermissions(Add.this,new String[]{
-                             Manifest.permission.CAMERA
-                     },CAMERA_KO);
-                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                     dispatchTakePictureIntent();
-
-                     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                         *//*startActivityForResult(takePictureIntent,101);*//*
-                         Toast.makeText(Add.this, "jana aatya xa ", Toast.LENGTH_SHORT).show();
-                         dispatchTakePictureIntent();
-                     }
-                     else {
-                         Toast.makeText(Add.this, "something went wrong", Toast.LENGTH_SHORT).show();
-                     }
-
-                 }*/
-
-                 /*Toast.makeText(Add.this, "This is camera", Toast.LENGTH_SHORT).show();
-                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
-                     dispatchTakePictureIntent();
-                 }*/
                  Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                  if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -201,27 +171,6 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             imagepreview.setImageResource(0);
             Picasso.get().load(mImageUri).into(imagepreview);
             }
-    }
-    /*====================================Bitmap===============================================*/
-
-    private void HandleUpload(Bitmap bitmap) {
-         ByteArrayOutputStream baos=new ByteArrayOutputStream();
-         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
-         StorageReference reference=FirebaseStorage.getInstance().getReference()
-                 .child("Details").child(System.currentTimeMillis()+".jpeg");
-         reference.putBytes(baos.toByteArray())
-                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                     @Override
-                     public void onSuccess(UploadTask.TaskSnapshot snapshot) {
-                         Toast.makeText(Add.this, "successful", Toast.LENGTH_SHORT).show();
-
-                     }
-                 }).addOnFailureListener(new OnFailureListener() {
-             @Override
-             public void onFailure(@NonNull Exception e) {
-
-             }
-         });
     }
     /*====================================   File Extention   ===============================================*/
     private String getFileExtention(Uri uri){
@@ -286,7 +235,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(this, "Enter Mandatory...", Toast.LENGTH_SHORT).show();
             mImageUri=null;
         }
-        else if (mImageUri!=null/*&&bitmap!=null*/){
+        else if (mImageUri!=null){
             if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
                     connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
                 Toast.makeText(this, "Check Your Internet Connection...", Toast.LENGTH_SHORT).show();
@@ -299,76 +248,40 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             String demoimageuri="https://firebasestorage.googleapis.com/v0/b/demoforall-17e03.appspot.com/o/Details%2Fcamera.png?alt=media&token=903f560f-6b73-4a92-83ed-d5d36e79f50a";
             StoringInFirebase(demoimageuri);
         }
-
-        /*else if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() != NetworkInfo.State.CONNECTED &&
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED){
-            Toast.makeText(this, "Check Internet Connection...", Toast.LENGTH_SHORT).show();
-        }*/
-       /* else {
-            final ProgressDialog progressDialog= new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-
-            StorageReference filerefrence = mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
-
-            filerefrence.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    //String link=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
-                    while(!uri.isComplete());
-                    Uri link = uri.getResult();
-                    StoringInFirebase(link.toString());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Failed..", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded "+ (int)progress + "%");
-                }
-            });
-        }*/
     }
 
     /*====================================Uploading with Image ===============================================*/
 
     public void UploadingImage(){
-            final ProgressDialog progressDialog= new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+        final ProgressDialog progressDialog= new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
 
-            StorageReference filerefrence = mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
+        StorageReference filerefrence = mStorageRef.child(System.currentTimeMillis()+"."+getFileExtention(mImageUri));
 
-            filerefrence.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    //String link=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
-                    while(!uri.isComplete());
-                    Uri link = uri.getResult();
-                    StoringInFirebase(link.toString());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Failed..", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded "+ (int)progress + "%");
-                }
-            });
+        filerefrence.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                //String link=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                while(!uri.isComplete());
+                Uri link = uri.getResult();
+                StoringInFirebase(link.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Failed..", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progress= (100.0* taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                progressDialog.setMessage("Uploaded "+ (int)progress + "%");
+            }
+        });
     }
 
     /*============================Image From Camera========================================================*/
@@ -395,10 +308,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
             photoFile = null;
             try {
                 photoFile = createImageFile();
-                Toast.makeText(this, "photo file samma pugyo", Toast.LENGTH_SHORT).show();
             } catch (IOException ex) {
-                // Error occurred while creating the File
-                Toast.makeText(this, "something went worng", Toast.LENGTH_SHORT).show();
             }
 
             // Continue only if the File was successfully created
@@ -408,7 +318,7 @@ public class Add extends AppCompatActivity implements View.OnClickListener {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                     startActivityForResult(takePictureIntent,CAMERA_KO);
                 }catch (Exception e){
-                    Toast.makeText(this,"Camera aayena", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Camera Permission Denied...", Toast.LENGTH_SHORT).show();
                 }
             }
         }

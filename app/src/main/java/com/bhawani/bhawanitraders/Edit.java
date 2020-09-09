@@ -33,7 +33,7 @@ public class Edit extends AppCompatActivity {
         adapter=new AdapterEdit(options,this);
         editview.setAdapter(adapter);
 
-        //------------------for searching-----------------------------
+        //-----------------------------for searching-----------------------------
         searching.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -48,7 +48,7 @@ public class Edit extends AppCompatActivity {
             }
         });
 
-        //------------------for searhing ends---------------------------
+        //------------------------------for searhing ends------------------------------------------
     }
 
     private void Searching(String data) {

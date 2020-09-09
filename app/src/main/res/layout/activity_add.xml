@@ -68,7 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:inputType="number"
+                    android:digits="0123456789."
+                    android:inputType="number|numberDecimal"
                     style="@style/addingpage"
                     android:hint="Cost Price/PC"/>
             </LinearLayout>
@@ -87,8 +88,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:digits="0123456789."
+                    android:inputType="number|numberDecimal"
                     style="@style/addingpage"
-                    android:inputType="number"
                     android:hint="Selling Price / PC"/>
             </LinearLayout>
             <LinearLayout
@@ -106,8 +108,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:digits="0123456789."
+                    android:inputType="number|numberDecimal"
                     style="@style/addingpage"
-                    android:inputType="number"
                     android:hint="Price per Carton"/>
             </LinearLayout>
             <LinearLayout
@@ -121,6 +124,7 @@
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:src="@drawable/image"
+
                     android:layout_marginRight="15dp"
                     />
                 <Button
@@ -129,6 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="5dp"
+                    style="@style/button_style"
                     android:text="Select"/>
             </LinearLayout>
 
@@ -183,6 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="Scan"
+                    style="@style/button_style"
                     android:layout_weight="2.5"
                     />
             </LinearLayout>
@@ -197,6 +203,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Add"
+                    style="@style/button_style"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="5dp"
                     />
             </LinearLayout>

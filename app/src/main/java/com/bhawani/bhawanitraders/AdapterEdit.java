@@ -24,17 +24,19 @@ public class AdapterEdit extends FirebaseRecyclerAdapter<EditModel,AdapterEdit.E
 
     }
     @Override
-    protected void onBindViewHolder(@NonNull final EditViewHolder holder, final int position, @NonNull EditModel model) {
+    protected void onBindViewHolder(@NonNull final EditViewHolder holder, final int position, @NonNull final EditModel model) {
         holder.item.setText(model.getItem());
         holder.spperpiece.setText(model.getSPPerPiece());
         holder.sppercarton.setText(model.getSPPerCarton());
         Picasso.get().load(model.getImageUrl()).into(holder.goodsimgae);
+        /*========================================editing the details=======================*/
 
         holder.editmaedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent EditingTheDetail=new Intent(context,EditingActivity.class);
                 EditingTheDetail.putExtra("key",getRef(position).getKey());
+                EditingTheDetail.putExtra("ImageUrl",model.getImageUrl());
                 context.startActivity(EditingTheDetail);
             }
         });
