@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ViewFlipper flipper;
     private FirebaseAuth mAuth;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int Image : image) {
             flipperimage(Image);
         }
-        //SliderClass();
     }
-
+/*==========================================On click Ko lagi==============================*/
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search:
@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /*==========================================For fliping image==============================*/
+
     public void flipperimage(int image) {
         ImageView imageView = new ImageView(this);
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         flipper.setInAnimation(this, android.R.anim.slide_in_left);
         flipper.setOutAnimation(this, android.R.anim.slide_out_right);
     }
-
+    /*==========================================Option Menu ko lagi==============================*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
@@ -96,6 +98,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.contact:
                 Intent abtme=new Intent(this,AboutMe.class);
                 startActivity(abtme);
+                return  true;
+            case R.id.backtologin:
+                mAuth.signOut();
+                startActivity(new Intent(this,Login.class));
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FirebaseUser mUser=mAuth.getCurrentUser();
         if(mUser!=null){
             //There is some user
-            Toast.makeText(this, "You are logged in as always", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
         }
         else{
             //There is no user we need to go to the login part
